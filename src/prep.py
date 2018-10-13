@@ -37,11 +37,13 @@ class prep:
         generation_table = {}
         words = []
         tags = []
+        sentence = []
         line_count = 0
 
         for line in self.file1:
             if line_count % 3 == 0:
                 words = line.split()
+                sentence.append(words)
             elif line_count % 3 == 2:
                 tags = line.split()
                 prev_tag = self.sentence_start
@@ -64,7 +66,7 @@ class prep:
 
         transition_prob = self.convert_table_to_prob(transition_table)
         generation_prob = self.convert_table_to_prob(generation_table)
-        return [transition_prob, generation_prob]
+        return [sentence, transition_prob, generation_prob]
 
     def isCapital(self, word):
         return 1 if len(word) > 0 and word[0].isupper() else 0
@@ -94,6 +96,7 @@ class prep:
 
             line_count += 1
         return output
+
 
 #my_prep = prep('../Project2_resources/new_train.txt')
 #my_prep.pre_process_hmm()
