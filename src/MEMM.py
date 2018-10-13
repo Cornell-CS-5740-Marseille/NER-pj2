@@ -12,7 +12,7 @@ class MEMM():
         self.boi_end_list = []
         self.max_iter = 3
 
-    # reference from http://delivery.acm.org/10.1145/1080000/1072253/p25-chieu.pdf?ip=128.84.127.125&id=1072253&acc=OPEN&key=7777116298C9657D%2EB493315FA1EC298D%2E4D4702B0C3E38B35%2E6D218144511F3437&__acm__=1539378064_64f6873daee7f2c43e003c5d77a55927
+    # reference from Named entity recognition: a maximum entropy approach using global information
     def name_features(self, window_tuple, previous_BOI, window_feature):
         features = {}
         for word_index in range(len(window_tuple)):
