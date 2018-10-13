@@ -1,5 +1,6 @@
 import math
 
+
 class prep:
     def __init__(self, file1):
         self.file1 = open(file1)

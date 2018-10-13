@@ -1,4 +1,4 @@
-from src.prep import prep
+from prep import prep
 
 class HMM:
     def __init__(self):
@@ -14,7 +14,7 @@ class HMM:
         tags = ['B-PER', 'I-PER', 'B-LOC', 'I-LOC', 'B-ORG', 'I-ORG', 'B-MISC', 'I-MISC', 'O']
         tag_result_output = []
 
-        for line in range(len(words)):
+        for line in words:
             score = []
             BPTR = []
 
@@ -22,8 +22,14 @@ class HMM:
             for i in range(len(tags)):
                 s = []
                 b = []
-                prob_trans = transition_prob.get(self.sentence_start, 0).get(tags[i], 0)
-                prob_gen = generation_prob.get(tags[i], 0).get(line[0], 0)
+                prob_trans = transition_prob.get(self.sentence_start, 0)
+                if prob_trans != 0:
+                    prob_trans = prob_trans.get(tags[i], 0)
+                prob_gen = generation_prob.get(tags[i], 0)
+                #print prob_gen
+                if prob_gen != 0:
+                    #print line[0]
+                    prob_gen = prob_gen.get(line[0], 0)
                 s.append(prob_trans*prob_gen)
                 score.append(s)
                 b.append(0)
@@ -35,11 +41,17 @@ class HMM:
                     max = -1
                     index = -1
                     for j in range(len(tags)):
-                        prob = score[j][t-1] * transition_prob.get(tags[j], 0).get(tags[i], 0)
+                        #prob = score[j][t-1] * transition_prob.get(tags[j], 0)
+                        prob = transition_prob.get(tags[j], 0)
+                        if prob != 0:
+                            prob = prob.get(tags[i], 0)
+                        prob = prob * score[j][t-1]
                         if prob > max:
                             max = prob
                             index = j
-                    gen_prob = generation_prob.get(tags[i], 0).get(line[t], 0)
+                    gen_prob = generation_prob.get(tags[i], 0)
+                    if gen_prob != 0:
+                        gen_prob = gen_prob.get(line[t], 0)
                     score[i].append(max * gen_prob)
                     BPTR[i].append(index)
 
@@ -56,7 +68,7 @@ class HMM:
             tag_result_line[len(line)-1] = tags[index]
             for i in range(len(line)-2, 0, -1):
                 tag_result_line_index[i] = BPTR[tag_result_line_index[i+1]][i+1]
-                tag_result_line[i] = tags[tag_result_line_index]
+                tag_result_line[i] = tags[tag_result_line_index[i]]
 
             tag_result_output.append(tag_result_line)
 
@@ -65,6 +77,7 @@ class HMM:
 
 my_prep = prep('../Project2_resources/validation.txt')
 data = my_prep.pre_process_hmm()
+#print data[1]
 model = HMM()
 print model.Viterbi(data)
 
