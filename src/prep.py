@@ -38,6 +38,7 @@ class prep:
         generation_table = {}
         words = []
         tags = []
+        tagtag = []
         sentence = []
         line_count = 0
 
@@ -47,6 +48,7 @@ class prep:
                 sentence.append(words)
             elif line_count % 3 == 2:
                 tags = line.split()
+                tagtag.append(tags)
                 prev_tag = self.sentence_start
                 for i in range(len(tags)):
                     tag = tags[i]
@@ -67,7 +69,7 @@ class prep:
 
         transition_prob = self.convert_table_to_prob(transition_table)
         generation_prob = self.convert_table_to_prob(generation_table)
-        return [sentence, transition_prob, generation_prob]
+        return [sentence, transition_prob, generation_prob, tagtag]
 
     def isCapital(self, word):
         return 1 if len(word) > 0 and word[0].isupper() else 0

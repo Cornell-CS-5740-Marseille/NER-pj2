@@ -81,11 +81,25 @@ class HMM:
 
         return tag_result_output
 
-
-my_prep = prep('../Project2_resources/validation.txt')
+my_prep = prep('../Project2_resources/new_train.txt')
+#my_prep = prep('../Project2_resources/validation.txt')
 data = my_prep.pre_process_hmm()
 #print data[1]
 model = HMM()
 tag = model.Viterbi(data)
-print tag
+sum = 0
+correct = 0
+#print data[3]
+#print tag
+for i in range(len(data[3])):
+    for j in range(len(data[3][i])):
+        sum = sum + 1
+        if tag[i][j] == data[3][i][j]:
+            correct = correct + 1
+
+print correct
+print sum
+accuracy = float(correct) / float(sum)
+print accuracy
+#print tag
 
