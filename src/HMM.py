@@ -9,8 +9,11 @@ class HMM:
 
     def Viterbi(self,data):
         words = data[0]
+        #print words
         transition_prob = data[1]
+        #print transition_prob
         generation_prob = data[2]
+        #print generation_prob
         tags = ['B-PER', 'I-PER', 'B-LOC', 'I-LOC', 'B-ORG', 'I-ORG', 'B-MISC', 'I-MISC', 'O']
         tag_result_output = []
 
@@ -22,9 +25,10 @@ class HMM:
             for i in range(len(tags)):
                 s = []
                 b = []
-                prob_trans = transition_prob.get(self.sentence_start, 0)
-                if prob_trans != 0:
-                    prob_trans = prob_trans.get(tags[i], 0)
+                #prob_trans = transition_prob.get(self.sentence_start, 0)
+                prob_trans = 1
+                # if prob_trans != 0:
+                #     prob_trans = prob_trans.get(tags[i], 0)
                 prob_gen = generation_prob.get(tags[i], 0)
                 #print prob_gen
                 if prob_gen != 0:
@@ -34,6 +38,9 @@ class HMM:
                 score.append(s)
                 b.append(0)
                 BPTR.append(b)
+
+            #print BPTR
+            #print score
 
             #iteration
             for t in range(1, len(line)):
@@ -66,7 +73,7 @@ class HMM:
                     index = i
             tag_result_line_index[len(line)-1] = index
             tag_result_line[len(line)-1] = tags[index]
-            for i in range(len(line)-2, 0, -1):
+            for i in range(len(line)-2, -1, -1):
                 tag_result_line_index[i] = BPTR[tag_result_line_index[i+1]][i+1]
                 tag_result_line[i] = tags[tag_result_line_index[i]]
 
@@ -79,5 +86,6 @@ my_prep = prep('../Project2_resources/validation.txt')
 data = my_prep.pre_process_hmm()
 #print data[1]
 model = HMM()
-print model.Viterbi(data)
+tag = model.Viterbi(data)
+print tag
 
