@@ -6,6 +6,7 @@ class prep:
         self.file1 = open(file1)
         self.sentence_start = '<s>'
         self.sentence_end = '</s>'
+        self.allwords = set()
 
     def divide_into_validation(self, validate_percent):
         line_count = 0
@@ -33,6 +34,33 @@ class prep:
                 table[key][value] = table[key][value]*1.0/count
         return table
 
+    def table_add_k_smooth(self, table, k):
+        for key in table:
+            for target in self.allwords:
+                if target in table[key]:
+                    table[key][target] += k
+                else:
+                    table[key][target] = k
+        return table
+
+    def pre_process_hmm_test(self):
+        line_count = 0
+        sentence = []
+        pos = []
+        number = []
+        for line in self.file1:
+            if line_count % 3 == 0:
+                words = line.split()
+                sentence.append(words)
+            elif line_count % 3 == 1:
+                words = line.split()
+                pos.append(words)
+            else:
+                words = line.split()
+                number.append(words)
+            line_count += 1
+        return [sentence, pos, number]
+
     def pre_process_hmm(self):
         transition_table = {}
         generation_table = {}
@@ -52,6 +80,7 @@ class prep:
                 for i in range(len(tags)):
                     tag = tags[i]
                     word = words[i]
+                    self.allwords.add(word)
                     if prev_tag != self.sentence_start:
                         if prev_tag in transition_table:
                             transition_table[prev_tag][tag] = transition_table[prev_tag][tag] + 1 \
@@ -66,6 +95,7 @@ class prep:
                         generation_table[tag] = {word: 1}
             line_count += 1
 
+        generation_table = self.table_add_k_smooth(generation_table, 0.001)
         transition_prob = self.convert_table_to_prob(transition_table)
         generation_prob = self.convert_table_to_prob(generation_table)
         return [sentence, transition_prob, generation_prob, tagtag]
@@ -132,6 +162,7 @@ class prep:
         return baseline
 
 my_prep = prep('../Project2_resources/new_train.txt')
-#my_prep.pre_process_hmm()
+#print my_prep.pre_process_hmm()
 #my_prep.pre_process_memm()
-my_prep.generate_baseline()
+#my_prep.generate_baseline()
+#print my_prep.allwords
