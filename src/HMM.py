@@ -103,3 +103,21 @@ accuracy = float(correct) / float(sum)
 print accuracy
 #print tag
 
+my_prep = prep('../Project2_resources/new_train.txt')
+correct = 0
+baseline = my_prep.generate_baseline()
+for i in range(len(data[3])):
+    for j in range(len(data[3][i])):
+        tag = ''
+        if data[0][i][j] in baseline:
+            tag = baseline[data[0][i][j]]
+        else:
+            tag = 'O'
+        if tag == data[3][i][j]:
+            correct = correct + 1
+
+print correct
+print sum
+accuracy = float(correct) / float(sum)
+print accuracy
+

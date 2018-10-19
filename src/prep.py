@@ -37,7 +37,6 @@ class prep:
         transition_table = {}
         generation_table = {}
         words = []
-        tags = []
         tagtag = []
         sentence = []
         line_count = 0
@@ -100,7 +99,39 @@ class prep:
             line_count += 1
         return output
 
+    def generate_baseline(self):
+        words = []
+        baseline = {}
+        line_count = 0
 
-#my_prep = prep('../Project2_resources/new_train.txt')
+        for line in self.file1:
+            if line_count % 3 == 0:
+                words = line.split()
+            elif line_count % 3 == 2:
+                tags = line.split()
+                for i in range(len(tags)):
+                    tag = tags[i]
+                    word = words[i]
+                    if word in baseline:
+                        if tag in baseline[word]:
+                            baseline[word][tag] += 1
+                        else:
+                            baseline[word][tag] = 1
+                    else:
+                        baseline[word] = {tag : 1}
+            line_count += 1
+
+        for key in baseline:
+            max = 0
+            word = ''
+            for value in baseline[key]:
+                if baseline[key][value] > max:
+                    max = baseline[key][value]
+                    word = value
+            baseline[key] = word
+        return baseline
+
+my_prep = prep('../Project2_resources/new_train.txt')
 #my_prep.pre_process_hmm()
 #my_prep.pre_process_memm()
+my_prep.generate_baseline()
