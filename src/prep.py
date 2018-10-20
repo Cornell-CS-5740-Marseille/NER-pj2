@@ -130,6 +130,34 @@ class prep:
             line_count += 1
         return output
 
+    def pre_process_memm_test(self):
+        output = []
+        line_count = 0
+
+        for line in self.file1:
+            if line_count % 3 == 0:
+                words = line.split()
+            elif line_count % 3 == 1:
+                pos = line.split()
+            else:
+                tags = line.split()
+                sentence = []
+                for i in range(len(tags)):
+                    window_words = []
+                    if i == 0:
+                        window_words.append(["<s>", "START", "START"])
+                    else:
+                        window_words.append([words[i-1], pos[i-1], tags[i-1]])
+                    window_words.append([words[i], pos[i], tags[i]])
+                    if i == len(tags) - 1:
+                        window_words.append(["</s>", "END", "END"])
+                    else:
+                        window_words.append([words[i + 1], pos[i + 1], tags[i + 1]])
+                    sentence.append(window_words)
+                output.append(sentence)
+
+            line_count += 1
+        return output
     def generate_baseline(self):
         words = []
         baseline = {}
