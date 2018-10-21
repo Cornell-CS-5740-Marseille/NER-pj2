@@ -4,6 +4,7 @@ class HMM:
     def __init__(self):
         self.sentence_start = '<s>'
         self.sentence_end = '</s>'
+        self.unknown = '<unk>'
 
 
     def Viterbi(self,data):
@@ -15,6 +16,13 @@ class HMM:
         #print generation_prob
         tags = ['O', 'B-PER', 'I-PER', 'B-LOC', 'I-LOC', 'B-ORG', 'I-ORG', 'B-MISC', 'I-MISC']
         tag_result_output = []
+        allwords = data[4]
+
+        # line = []
+        #
+        # for l in words:
+        #     for i in l:
+        #         line.append(i)
 
         for line in words:
             score = []
@@ -32,6 +40,8 @@ class HMM:
                 #print prob_gen
                 if prob_gen != 0:
                     #print line[0]
+                    if line[0] not in allwords:
+                        line[0] = self.unknown
                     prob_gen = prob_gen.get(line[0], 0)
                 s.append(prob_trans*prob_gen)
                 score.append(s)
@@ -57,6 +67,8 @@ class HMM:
                             index = j
                     gen_prob = generation_prob.get(tags[i], 0)
                     if gen_prob != 0:
+                        if line[t] not in allwords:
+                            line[t] = self.unknown
                         gen_prob = gen_prob.get(line[t], 0)
                     score[i].append(max * gen_prob)
                     BPTR[i].append(index)

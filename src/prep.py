@@ -101,7 +101,7 @@ class prep:
         generation_table = self.table_add_k_smooth(generation_table, 0.01)
         transition_prob = self.convert_table_to_prob(transition_table)
         generation_prob = self.convert_table_to_prob(generation_table)
-        return [sentence, transition_prob, generation_prob, tagtag]
+        return [sentence, transition_prob, generation_prob, tagtag, self.allwords]
 
     def isCapital(self, word):
         return 1 if len(word) > 0 and word[0].isupper() else 0
