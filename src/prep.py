@@ -36,6 +36,9 @@ class prep:
 
     def table_add_k_smooth(self, table, k):
         for key in table:
+            table[key]['<unk>'] = 0
+            for value in table[key]:
+                table[key]['<unk>'] += 1
             for target in self.allwords:
                 if target in table[key]:
                     table[key][target] += k
@@ -95,7 +98,7 @@ class prep:
                         generation_table[tag] = {word: 1}
             line_count += 1
 
-        generation_table = self.table_add_k_smooth(generation_table, 0.001)
+        generation_table = self.table_add_k_smooth(generation_table, 0.01)
         transition_prob = self.convert_table_to_prob(transition_table)
         generation_prob = self.convert_table_to_prob(generation_table)
         return [sentence, transition_prob, generation_prob, tagtag]
