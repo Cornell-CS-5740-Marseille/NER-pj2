@@ -1,22 +1,41 @@
-from prep import prep
-from HMM import HMM
 import csv
+from src.MEMM import MEMM
+from src.prep import prep
 
-my_prep = prep('../Project2_resources/train.txt')
-data = my_prep.pre_process_hmm()
+prepocessing = prep('../Project2_resources/train.txt')
+data = prepocessing.pre_process_memm()
+#
+
+memm_classifier = MEMM(data)
+memm_classifier.trainMEMM(True)
+
+test_prepocessing = prep('../Project2_resources/test.txt')
+test_words = test_prepocessing.pre_process_memm_test()
 my_prep_test = prep('../Project2_resources/test.txt')
 data_test = my_prep_test.pre_process_hmm_test()
 
-data[0] = data_test[0]
-model = HMM()
-tags = model.Viterbi(data)
-# print data_test[2]
+tags = []
+actual_list = []
+words = []
+for x in range(len(test_words)):
+    sentence = test_words[x]
+    word_list = map(lambda x: x[1][0], sentence)
+    type_list = map(lambda x: x[1][2], sentence)
+    position_list = map(lambda x: x[1][2], sentence)
+    # print(word_list)
+    # print(type_list)
+    actual_list += type_list
+    words.append(word_list)
+
+    prediction = memm_classifier.viterbi_search(sentence)
+    # print(prediction)
+    tags.append(prediction)
 
 dict = {'PER': '', 'LOC': '', 'ORG': '', 'MISC': ''}
 prev_tag = None
 prev_number = 0
 start_num = 0
-print tags
+
 for i in range(len(tags)):
     tags_line = tags[i]
     numbers_line = data_test[2][i]
@@ -48,7 +67,7 @@ for i in range(len(tags)):
         prev_number = number
 #print dict
 
-with open('../output/speech_classification.csv', mode='w') as test_output:
+with open('../output/speech_classification_MEMM.csv', mode='w') as test_output:
     speech_writer = csv.writer(test_output, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     speech_writer.writerow(['Type', 'Prediction'])
 
