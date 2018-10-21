@@ -108,5 +108,5 @@ venv.bak/
 
 
 #configurations
-.idea/
+.idea/workspace.xml
 models/

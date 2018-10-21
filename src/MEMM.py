@@ -2,7 +2,7 @@ import random
 import os.path
 from nltk.classify import MaxentClassifier
 import pickle
-
+import re
 from src.prep import prep
 
 
@@ -15,29 +15,40 @@ class MEMM():
         self.window_set = window_data
         self.boi_set = map(lambda x: x[1][2], window_data)
         self.boi_end_list = map(lambda y: y[1][2], filter(lambda x: x[-1][1] == "END", window_data))
-        self.max_iter = 3
+        self.max_iter = 30
         self.fname = "../models/MaxentClassifier.pickle"
 
     # reference from "Named entity recognition: a maximum entropy approach using global information"
     def name_features(self, window_tuple, previousBOI):
         features = {}
+        word = str(window_tuple[1][0])
         features["PreviousType"] = previousBOI
+        features["InitCapPeriod"] = word[0].isupper() and word[len(word) - 1] == "."
+        # features["OneCap"] = len(word) == 1 and bool(re.match('[A-Z]', word))
+        features["AllCapsPeriod"] = word.isupper() and word[len(word) - 1] == "."
+        features["ContainDigit"] = bool(re.match('-?\d+', word))
+        features["TwoD"] = len(word) == 2 and word[0].isdigit() and word[1].isdigit()
+        features["FourD"] = len(word) == 4 and word[0].isdigit() and word[1].isdigit() and word[2].isdigit() and word[3].isdigit()
+        features["DigitSlash"]= bool(re.match('[0-9]+\/[0-9]+', word))
+        features["Dollar"] = "$" in word
+        features["Percent"] = "%" in word
+        features["DigitPeriod"] = bool(re.match('[0-9]+.[0-9]*', word))
+
+        # First Word
+        features["FirstWord"] = window_tuple[0][1] == "START"
+
+        # Date
+        features["DateName"] = word in ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",
+                                        "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         for word_index in range(len(window_tuple)):
             word = str(window_tuple[word_index][0])
             features["Word_" + str(word_index)] = word
             features["Tag_" + str(word_index)] = window_tuple[word_index][1]
-            # features["Type_" + str(word_index)] = window_tuple[word_index][2]
-            features["InitCapPeriod_" + str(word_index)] = word[0].isupper() and word[len(word)-1] == "."
-            # features["AllCapsPeriod_" + str(word_index)] = 0
-            # features["ContainDigit_" + str(word_index)] = 0
-            # features["TwoD_" + str(word_index)] = 0
-            # features["FourD_" + str(word_index)] = 0
-            # features["DigitSlash_" + str(word_index)] = 0
-            # features["Dollar_" + str(word_index)] = 0
-            # features["Percent_" + str(word_index)] = 0
-            # features["DigitPeriod_" + str(word_index)] = 0
-            # features["FirstWord_" + str(word_index)] = 0
-            # features["Date_" + str(word_index)] = 0
+
+            features["InitCap_" + str(word_index)] = word[0].isupper()
+            features["ALLCap_" + str(word_index)] = word.isupper()
+            features["MixedCap_" + str(word_index)] = word.lower() != word and word.upper() != word
+
             # features["Corporate-Suffix_" + str(word_index)] = 0
             # features["Person-Prefix_" + str(word_index)] = 0
 
@@ -65,28 +76,29 @@ class MEMM():
             prob = format(end_num / (count_num + 0.0), '.5f')
             self.end_dic[type] = prob
 
-    def classification(self, tuple):
-        testone = self.maxent_classifier.classify(self.name_features(tuple))
-        print(testone)
-
-    def precision_score(self, prediction_list, actual_list):
-        precision = len(list(filter(lambda x: x[0] == x[1], zip(prediction_list, actual_list)))) / (len(prediction_list) + 0.0)
+    def precision_score(self, prediction_list, actual_list, word_list):
+        precision = 0
+        for x in range(len(prediction_list)):
+            if prediction_list[x] != actual_list[x]:
+                print("wrong prediction! word:", word_list[x] , ", prediction: ", prediction_list[x], ", truth: " , actual_list[x])
+            else:
+                precision += 1
+        precision = precision / (len(prediction_list) + 0.0)
         return precision
 
     def viterbi_search(self, word_list):
         viterbi = [[0 for x in range((len(word_list) + 1))] for y in range(len(self.NE_type))]
         back_pointer = [["" for x in range((len(word_list) + 1))] for y in range(len(self.NE_type))]
 
+        feature_0 = self.name_features(word_list[0], "START")
         for index, type in enumerate(self.NE_type):
-            probabilities = self.maxent_classifier.prob_classify(self.name_features(word_list[0], "START"))
+            probabilities = self.maxent_classifier.prob_classify(feature_0)
             type_prob = float(probabilities.prob(type))
             viterbi[index][1] = type_prob
             # start with 0
             back_pointer[index][1] = 0
 
         # for word from 2 to len(word_list)
-        max_score = 0
-        max_previous_prob = 0
         for w_index in range(1, len(word_list)):
             # find the max viterbi
             word_window = word_list[w_index]
@@ -117,27 +129,4 @@ class MEMM():
         return path
 
 
-
-prepocessing = prep('../Project2_resources/new_train.txt')
-data = prepocessing.pre_process_memm()
-#
-memm_classifier = MEMM(data)
-memm_classifier.trainMEMM(True)
-
-# memm_classifier.classification(("American", "IN"))
-
-test_prepocessing = prep('../Project2_resources/validation.txt')
-test_words = test_prepocessing.pre_process_memm_test()
-prediction_list = []
-actual_list = []
-for x in range(len(test_words[0])):
-    sentence = test_words[x]
-    word_list = map(lambda x: x[1][0], sentence)
-    type_list = map(lambda x: x[1][2], sentence)
-    print(word_list, type_list)
-    actual_list += type_list
-    prediction_list += memm_classifier.viterbi_search(sentence)
-    # print(memm_classifier.viterbi_search(sentence))
-
-print(memm_classifier.precision_score(prediction_list, actual_list))
 
