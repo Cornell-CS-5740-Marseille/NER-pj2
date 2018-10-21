@@ -13,7 +13,7 @@ class HMM:
         #print transition_prob
         generation_prob = data[2]
         #print generation_prob
-        tags = ['B-PER', 'I-PER', 'B-LOC', 'I-LOC', 'B-ORG', 'I-ORG', 'B-MISC', 'I-MISC', 'O']
+        tags = ['O', 'B-PER', 'I-PER', 'B-LOC', 'I-LOC', 'B-ORG', 'I-ORG', 'B-MISC', 'I-MISC']
         tag_result_output = []
 
         for line in words:
