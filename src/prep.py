@@ -7,6 +7,7 @@ class prep:
         self.sentence_start = '<s>'
         self.sentence_end = '</s>'
         self.allwords = set()
+        self.alltags = ['O', 'B-PER', 'I-PER', 'B-LOC', 'I-LOC', 'B-ORG', 'I-ORG', 'B-MISC', 'I-MISC']
 
     def divide_into_validation(self, validate_percent):
         line_count = 0
@@ -38,12 +39,75 @@ class prep:
         for key in table:
             table[key]['<unk>'] = 0
             for value in table[key]:
-                table[key]['<unk>'] += 1
+                if table[key][value] == 1:
+                    table[key]['<unk>'] += 1
             for target in self.allwords:
                 if target in table[key]:
                     table[key][target] += k
                 else:
                     table[key][target] = k
+        return table
+
+    def table_add_k_smooth_table(self, table, k):
+        for key in table:
+            table[key]['<unk>'] = 0
+            for value in table[key]:
+                if table[key][value] == 1:
+                    table[key]['<unk>'] += 1
+            for target in self.alltags:
+                if target in table[key]:
+                    table[key][target] += k
+                else:
+                    table[key][target] = k
+        return table
+
+    def dist_table_smoothed_kneser_ney(self, table):
+        reverse_dict = {}
+        smoothed_count_table = {}
+        all_unique_pair_counter = 0
+
+        for key in table:
+            table[key]['<unk>'] = 0
+            table[key]['<a>'] = 0
+            for value in table[key]:
+                if table[key][value] == 1:
+                    table[key]['<unk>'] += 1
+
+        for key in table:
+            for value in table[key]:
+                table[key]['<a>'] += 1
+                if value in reverse_dict:
+                    if key in reverse_dict[value]:
+                        reverse_dict[value][key] += 1
+                    else:
+                        reverse_dict[value][key] = 1
+                    reverse_dict[value]['<a>'] += 1
+                else:
+                    reverse_dict[value] = {key: 1}
+                    reverse_dict[value]['<a>'] = 1
+
+        for key in table:
+            all_unique_pair_counter += len(table[key]) - 1  # minus the <a> in the dict
+
+        discount = 0.01
+        for key in table:
+            smoothed_count_table[key] = {}
+            count_dict = table[key]
+            for target in self.allwords:
+                if target != '<a>':
+                    count = 0
+                    if target in count_dict:
+                        count = count_dict[target]
+                    percentage_after_discount = max(count - discount, 0) / \
+                                                (count_dict['<a>'] + 0.0)
+                    normalized = discount * len(count_dict) / (count_dict['<a>'] + 0.0)
+                    reverse_count = 0
+                    if target in reverse_dict:
+                        reverse_count = len(reverse_dict[target]) - 1
+                    prev = reverse_count / (all_unique_pair_counter + 0.0)
+                    smoothed_prob = percentage_after_discount + normalized * prev
+                    smoothed_count_table[key][target] = smoothed_prob
+        table = smoothed_count_table
         return table
 
     def pre_process_hmm_test(self):
@@ -98,7 +162,9 @@ class prep:
                         generation_table[tag] = {word: 1}
             line_count += 1
 
-        generation_table = self.table_add_k_smooth(generation_table, 0.01)
+        #transition_table = self.table_add_k_smooth_table(transition_table, 0.01)
+        #generation_table = self.table_add_k_smooth(generation_table, 0.002)
+        generation_table = self.dist_table_smoothed_kneser_ney(generation_table)
         transition_prob = self.convert_table_to_prob(transition_table)
         generation_prob = self.convert_table_to_prob(generation_table)
         return [sentence, transition_prob, generation_prob, tagtag, self.allwords]
@@ -161,6 +227,7 @@ class prep:
 
             line_count += 1
         return output
+
     def generate_baseline(self):
         words = []
         baseline = {}
