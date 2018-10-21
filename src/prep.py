@@ -115,20 +115,49 @@ class prep:
             else:
                 tags = line.split()
                 for i in range(len(tags)):
-                    item = [words[i], pos[i], tags[i]]
-                    feature_prev_word_cap = self.isCapital(words[i-1]) if i > 0 else 0
-                    feature_curr_word_cap = self.isCapital(words[i])
-                    feature_next_word_cap = self.isCapital(words[i+1]) if i < len(tags)-1 else 0
-                    features = []
-                    features.append(feature_prev_word_cap)
-                    features.append(feature_curr_word_cap)
-                    features.append(feature_next_word_cap)
-                    item.append(features)
-                    output.append(item)
+                    window_words = []
+                    if i == 0:
+                        window_words.append(["<s>", "START", "O"])
+                    else:
+                        window_words.append([words[i-1], pos[i-1], tags[i-1]])
+                    window_words.append([words[i], pos[i], tags[i]])
+                    if i == len(tags) - 1:
+                        window_words.append(["</s>", "END", "O"])
+                    else:
+                        window_words.append([words[i + 1], pos[i + 1], tags[i + 1]])
+                    output.append(window_words)
 
             line_count += 1
         return output
 
+    def pre_process_memm_test(self):
+        output = []
+        line_count = 0
+
+        for line in self.file1:
+            if line_count % 3 == 0:
+                words = line.split()
+            elif line_count % 3 == 1:
+                pos = line.split()
+            else:
+                tags = line.split()
+                sentence = []
+                for i in range(len(tags)):
+                    window_words = []
+                    if i == 0:
+                        window_words.append(["<s>", "START", "START"])
+                    else:
+                        window_words.append([words[i-1], pos[i-1], tags[i-1]])
+                    window_words.append([words[i], pos[i], tags[i]])
+                    if i == len(tags) - 1:
+                        window_words.append(["</s>", "END", "END"])
+                    else:
+                        window_words.append([words[i + 1], pos[i + 1], tags[i + 1]])
+                    sentence.append(window_words)
+                output.append(sentence)
+
+            line_count += 1
+        return output
     def generate_baseline(self):
         words = []
         baseline = {}
