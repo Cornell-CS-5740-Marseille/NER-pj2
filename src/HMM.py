@@ -87,6 +87,7 @@ class HMM:
                 if score[i][l-1] > max:
                     max = score[i][l-1]
                     index = i
+
             tag_result_line_index[l-1] = index
             tag_result_line[l-1] = tags[index]
             for i in range(l-2, -1, -1):
