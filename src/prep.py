@@ -116,6 +116,8 @@ class prep:
                 tags = line.split()
                 for i in range(len(tags)):
                     window_words = []
+                    # if tags[i] != 'O':
+                    #     print(words[i], pos[i], tags[i])
                     if i == 0:
                         window_words.append(["<s>", "START", "O"])
                     else:

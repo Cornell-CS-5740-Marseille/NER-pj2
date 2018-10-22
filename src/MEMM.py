@@ -16,7 +16,7 @@ class MEMM():
         self.boi_set = map(lambda x: x[1][2], window_data)
         self.boi_end_list = map(lambda y: y[1][2], filter(lambda x: x[-1][1] == "END", window_data))
         self.max_iter = 30
-        self.fname = "../models/MaxentClassifier.pickle"
+        self.fname = "../models/MaxentClassifier_moreFeatures.pickle"
 
     # reference from "Named entity recognition: a maximum entropy approach using global information"
     def name_features(self, window_tuple, previousBOI):
@@ -24,15 +24,15 @@ class MEMM():
         word = str(window_tuple[1][0])
         features["PreviousType"] = previousBOI
         features["InitCapPeriod"] = word[0].isupper() and word[len(word) - 1] == "."
-        # features["OneCap"] = len(word) == 1 and bool(re.match('[A-Z]', word))
+        features["OneCap"] = len(word) == 1 and bool(re.match('^[A-Z]$', word))
         features["AllCapsPeriod"] = word.isupper() and word[len(word) - 1] == "."
-        features["ContainDigit"] = bool(re.match('-?\d+', word))
+        features["CharSlashDigit"] = bool(re.match('^[A-Z]+[-]*[0-9]+$', word))
         features["TwoD"] = len(word) == 2 and word[0].isdigit() and word[1].isdigit()
         features["FourD"] = len(word) == 4 and word[0].isdigit() and word[1].isdigit() and word[2].isdigit() and word[3].isdigit()
-        features["DigitSlash"]= bool(re.match('[0-9]+\/[0-9]+', word))
+        features["DigitSlash"]= bool(re.match('^[0-9]+\/[0-9]+$', word))
         features["Dollar"] = "$" in word
         features["Percent"] = "%" in word
-        features["DigitPeriod"] = bool(re.match('[0-9]+.[0-9]*', word))
+        features["DigitPeriod"] = bool(re.match('^[0-9]+.[0-9]*$', word))
 
         # First Word
         features["FirstWord"] = window_tuple[0][1] == "START"
@@ -40,6 +40,9 @@ class MEMM():
         # Date
         features["DateName"] = word in ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",
                                         "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+
+        # Corporate-Suffix-List
+        features["Corporate-Suffix"] = 0
         for word_index in range(len(window_tuple)):
             word = str(window_tuple[word_index][0])
             features["Word_" + str(word_index)] = word
@@ -48,15 +51,13 @@ class MEMM():
             features["InitCap_" + str(word_index)] = word[0].isupper()
             features["ALLCap_" + str(word_index)] = word.isupper()
             features["MixedCap_" + str(word_index)] = word.lower() != word and word.upper() != word
-
-            # features["Corporate-Suffix_" + str(word_index)] = 0
-            # features["Person-Prefix_" + str(word_index)] = 0
-
+            features["Corporate-Suffix"] = features["Corporate-Suffix"] or (word.lower() in ["ltd.", "ltd", "associates", "inc.", "inc", "co.", "co", "corp.", "corp"] or \
+                word in ["University", "Committee", "Institute", "Commission", "Plc", "Airlines"])
         return features
     def trainMEMM(self, dump):
         self.end_dic = {}
         if(os.path.isfile(self.fname)):
-            classifier_file = open("../models/MaxentClassifier.pickle", "rb")
+            classifier_file = open(self.fname, "rb")
             self.maxent_classifier = pickle.load(classifier_file)
             classifier_file.close()
         else:
@@ -64,7 +65,7 @@ class MEMM():
             self.maxent_classifier = MaxentClassifier.train(train_set, max_iter = self.max_iter)
 
             if dump:
-                f = open("../models/MaxentClassifier.pickle", "wb")
+                f = open(self.fname, "wb")
                 pickle.dump(self.maxent_classifier, f)
                 f.close()
         for type in self.NE_type:
@@ -130,3 +131,5 @@ class MEMM():
 
 
 
+# preprocessing = prep("../Project2_resources/train.txt")
+# preprocessing.pre_process_memm()
