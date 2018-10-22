@@ -12,18 +12,18 @@ model = HMM()
 tags = model.Viterbi(data)
 # print data_test[2]
 
-dict = {'PER': '', 'LOC': '', 'ORG': '', 'MISC': ''}
+dict = {'PER': '', 'LOC': '', 'ORG': '', 'MISC': '', 'O': ''}
 prev_tag = None
 prev_number = 0
 start_num = 0
-print tags
+
 for i in range(len(tags)):
     tags_line = tags[i]
     numbers_line = data_test[2][i]
     for j in range(len(tags_line)):
         tag = tags_line[j]
         number = numbers_line[j]
-        #print tag, number
+        print tag, number
         if 'PER' in tag and prev_tag != 'PER':
             if prev_tag != None:
                 dict[prev_tag] += start_num + '-'+ prev_number + ' '
@@ -39,16 +39,21 @@ for i in range(len(tags)):
                 dict[prev_tag] += start_num + '-' + prev_number + ' '
             start_num = number
             prev_tag = 'ORG'
+        elif 'MISC' in tag and prev_tag != 'MISC':
+            if prev_tag != None:
+                dict[prev_tag] += start_num + '-' + prev_number + ' '
+            start_num = number
+            prev_tag = 'MISC'
         else:
-            if prev_tag != 'MISC':
+            if tag == 'O' and prev_tag != 'O':
                 if prev_tag != None:
                     dict[prev_tag] += start_num + '-' + prev_number + ' '
                 start_num = number
-                prev_tag = 'MISC'
+                prev_tag = 'O'
         prev_number = number
-#print dict
+print dict
 
-with open('../output/speech_classification.csv', mode='w') as test_output:
+with open('../output/speech_classification3.csv', mode='w') as test_output:
     speech_writer = csv.writer(test_output, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     speech_writer.writerow(['Type', 'Prediction'])
 

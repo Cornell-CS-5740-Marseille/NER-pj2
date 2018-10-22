@@ -4,6 +4,7 @@ class HMM:
     def __init__(self):
         self.sentence_start = '<s>'
         self.sentence_end = '</s>'
+        self.unknown = '<unk>'
 
 
     def Viterbi(self,data):
@@ -15,6 +16,13 @@ class HMM:
         #print generation_prob
         tags = ['O', 'B-PER', 'I-PER', 'B-LOC', 'I-LOC', 'B-ORG', 'I-ORG', 'B-MISC', 'I-MISC']
         tag_result_output = []
+        allwords = data[4]
+
+        # line = []
+        #
+        # for l in words:
+        #     for i in l:
+        #         line.append(i)
 
         for line in words:
             score = []
@@ -24,14 +32,16 @@ class HMM:
             for i in range(len(tags)):
                 s = []
                 b = []
-                #prob_trans = transition_prob.get(self.sentence_start, 0)
-                prob_trans = 1
-                # if prob_trans != 0:
-                #     prob_trans = prob_trans.get(tags[i], 0)
+                prob_trans = transition_prob.get(self.sentence_start, 0)
+                #prob_trans = 1
+                if prob_trans != 0:
+                    prob_trans = prob_trans.get(tags[i], 0)
                 prob_gen = generation_prob.get(tags[i], 0)
                 #print prob_gen
                 if prob_gen != 0:
                     #print line[0]
+                    if line[0] not in allwords:
+                        line[0] = self.unknown
                     prob_gen = prob_gen.get(line[0], 0)
                 s.append(prob_trans*prob_gen)
                 score.append(s)
@@ -42,7 +52,7 @@ class HMM:
             #print score
 
             #iteration
-            for t in range(1, len(line)):
+            for t in range(1, len(line)-1):
                 for i in range(len(tags)):
                     max = -1
                     index = -1
@@ -57,22 +67,30 @@ class HMM:
                             index = j
                     gen_prob = generation_prob.get(tags[i], 0)
                     if gen_prob != 0:
+                        if line[t] not in allwords:
+                            line[t] = self.unknown
                         gen_prob = gen_prob.get(line[t], 0)
                     score[i].append(max * gen_prob)
                     BPTR[i].append(index)
 
             #identify sequence
-            tag_result_line = [None] * len(line)
-            tag_result_line_index = [None] * len(line)
+            l = len(line)-2
+            tag_result_line = [None] * l
+            tag_result_line_index = [None] * l
             max = -1
             index = -1
             for i in range(len(tags)):
-                if score[i][len(line)-1] > max:
-                    max = score[i][len(line)-1]
+                prob = transition_prob.get(tags[i], 0)
+                if prob != 0:
+                    prob = prob.get(self.sentence_end, 0)
+                score[i][l-1] = score[i][l-1] * prob
+                if score[i][l-1] > max:
+                    max = score[i][l-1]
                     index = i
-            tag_result_line_index[len(line)-1] = index
-            tag_result_line[len(line)-1] = tags[index]
-            for i in range(len(line)-2, -1, -1):
+
+            tag_result_line_index[l-1] = index
+            tag_result_line[l-1] = tags[index]
+            for i in range(l-2, -1, -1):
                 tag_result_line_index[i] = BPTR[tag_result_line_index[i+1]][i+1]
                 tag_result_line[i] = tags[tag_result_line_index[i]]
 
