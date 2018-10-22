@@ -135,25 +135,27 @@ class prep:
         tagtag = []
         sentence = []
         line_count = 0
-        self.allwords.add(self.sentence_start)
-        self.allwords.add(self.sentence_end)
+        #self.allwords.add(self.sentence_start)
+        #self.allwords.add(self.sentence_end)
 
         for line in self.file1:
             if line_count % 3 == 0:
                 words = line.split()
+                sentence.append(words)
             elif line_count % 3 == 2:
                 tags = line.split()
+                tagtag.append(tags)
                 prev_tag = self.sentence_start
                 for i in range(len(tags)):
                     tag = tags[i]
-                    word = words[i].lower()
+                    word = words[i]
                     self.allwords.add(word)
-                    #if prev_tag != self.sentence_start:
-                    if prev_tag in transition_table:
-                        transition_table[prev_tag][tag] = transition_table[prev_tag][tag] + 1 \
+                    if prev_tag != self.sentence_start:
+                        if prev_tag in transition_table:
+                            transition_table[prev_tag][tag] = transition_table[prev_tag][tag] + 1 \
                             if tag in transition_table[prev_tag] else 1
-                    else:
-                        transition_table[prev_tag] = {tag: 1}
+                        else:
+                            transition_table[prev_tag] = {tag: 1}
 
                     prev_tag = tag
                     if tag in generation_table:
@@ -162,25 +164,26 @@ class prep:
                     else:
                         generation_table[tag] = {word: 1}
 
-                if len(tags) > 1 and prev_tag in transition_table:
-                    transition_table[prev_tag][self.sentence_end] = transition_table[prev_tag][self.sentence_end] + 1 \
-                        if self.sentence_end in transition_table[prev_tag] else 1
+                # if len(tags) > 1 and prev_tag in transition_table:
+                #     transition_table[prev_tag][self.sentence_end] = transition_table[prev_tag][self.sentence_end] + 1 \
+                #         if self.sentence_end in transition_table[prev_tag] else 1
 
-                tags.insert(0, self.sentence_start)
-                tags.append(self.sentence_end)
-                words.insert(0, self.sentence_start)
-                words.append(self.sentence_end)
-                tagtag.append(tags)
-                sentence.append(words)
+                # tags.insert(0, self.sentence_start)
+                # tags.append(self.sentence_end)
+                # words.insert(0, self.sentence_start)
+                # words.append(self.sentence_end)
+                # tagtag.append(tags)
+                # sentence.append(words)
 
             line_count += 1
 
         #transition_table = self.table_add_k_smooth_table(transition_table, 0.01)
-        generation_table = self.table_add_k_smooth(generation_table, 0.1)
+        #generation_table = self.table_add_k_smooth(generation_table, 0.1)
         #print generation_table
         #generation_table = self.dist_table_smoothed_kneser_ney(generation_table)
         transition_prob = self.convert_table_to_prob(transition_table)
         generation_prob = self.convert_table_to_prob(generation_table)
+
         #print transition_prob
         #print generation_prob
         return [sentence, transition_prob, generation_prob, tagtag, self.allwords]
