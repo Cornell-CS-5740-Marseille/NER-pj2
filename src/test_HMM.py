@@ -49,7 +49,7 @@ for i in range(len(tags)):
                 prev_tag = 'O'
         prev_number = number
         number += 1
-print dict
+#print dict
 
 dict_0 = dict
 
@@ -92,7 +92,7 @@ for i in range(len(tags)):
                 prev_tag = 'O'
         prev_number = number
         number += 1
-print dict
+#print dict
 dict_1 = dict
 
 correct = 0
@@ -109,6 +109,7 @@ for key in dict_0:
             i += 1
             j += 1
             predicted += 1
+            golden += 1
         elif arr1[i][0] == arr2[j][0] and arr1[i][1] != arr2[j][1]:
             i += 1
             j += 1
