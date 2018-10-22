@@ -32,10 +32,10 @@ class HMM:
             for i in range(len(tags)):
                 s = []
                 b = []
-                prob_trans = transition_prob.get(self.sentence_start, 0)
-                #prob_trans = 1
-                if prob_trans != 0:
-                    prob_trans = prob_trans.get(tags[i], 0)
+                #prob_trans = transition_prob.get(self.sentence_start, 0)
+                prob_trans = 1
+                # if prob_trans != 0:
+                #     prob_trans = prob_trans.get(tags[i], 0)
                 prob_gen = generation_prob.get(tags[i], 0)
                 #print prob_gen
                 if prob_gen != 0:
@@ -52,7 +52,7 @@ class HMM:
             #print score
 
             #iteration
-            for t in range(1, len(line)-1):
+            for t in range(1, len(line)):
                 for i in range(len(tags)):
                     max = -1
                     index = -1
@@ -74,27 +74,20 @@ class HMM:
                     BPTR[i].append(index)
 
             #identify sequence
-            l = len(line)-2
-            tag_result_line = [None] * l
-            tag_result_line_index = [None] * l
+            tag_result_line = [None] * len(line)
+            tag_result_line_index = [None] * len(line)
             max = -1
             index = -1
             for i in range(len(tags)):
-                prob = transition_prob.get(tags[i], 0)
-                if prob != 0:
-                    prob = prob.get(self.sentence_end, 0)
-                score[i][l-1] = score[i][l-1] * prob
-                if score[i][l-1] > max:
-                    max = score[i][l-1]
+                if score[i][len(line)-1] > max:
+                    max = score[i][len(line)-1]
                     index = i
-
-            tag_result_line_index[l-1] = index
-            tag_result_line[l-1] = tags[index]
-            for i in range(l-2, -1, -1):
+            tag_result_line_index[len(line)-1] = index
+            tag_result_line[len(line)-1] = tags[index]
+            for i in range(len(line)-2, -1, -1):
                 tag_result_line_index[i] = BPTR[tag_result_line_index[i+1]][i+1]
                 tag_result_line[i] = tags[tag_result_line_index[i]]
 
             tag_result_output.append(tag_result_line)
 
         return tag_result_output
-
