@@ -13,12 +13,12 @@ data[3] = data_test[3]
 #print data[2]
 model = HMM()
 tag = model.Viterbi(data)
-#print tag
+
 sum = 0
 correct = 0
 for i in range(len(data[3])):
-    for j in range(len(data[3][i])):
-        if tag[i][j] == data[3][i][j]:
+    for j in range(len(data[3][i])-2):
+        if tag[i][j] == data[3][i][j+1]:
             correct = correct + 1
         sum = sum + 1
 
