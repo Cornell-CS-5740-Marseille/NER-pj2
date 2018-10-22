@@ -52,7 +52,24 @@ The model has been trained and saved in the output directory. If you want to tra
 ```
 python test_kaggle_HMM.py
 ```
+if you want to try the MEMM by your settings, you can:
+```
+# preprocessing the training data
+prepocessing = prep(YOUR_TRAINING_FILE)
+data = prepocessing.pre_process_memm()
 
+# train the model
+memm_classifier = MEMM(data)
+memm_classifier.trainMEMM(True)
+
+# preprocessing the test data
+test_prepocessing = prep(YOUR_TEST_FILE')
+test_words = test_prepocessing.pre_process_memm_test()
+
+# Viterbi prediction
+for sentence in test_words:
+    prediction = memm_classifier.viterbi_search(sentence)
+```
 
 
 ## Authors
