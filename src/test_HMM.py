@@ -99,32 +99,33 @@ correct = 0
 predicted = 0
 golden = 0
 for key in dict_0:
-    arr1 = dict_0[key]
-    arr2 = dict_1[key]
-    i = 0
-    j = 0
-    while i < len(arr1) and j < len(arr2):
-        if arr1[i][0] == arr2[j][0] and arr1[i][1] == arr2[j][1]:
-            correct += 1
-            i += 1
-            j += 1
-            predicted += 1
-            golden += 1
-        elif arr1[i][0] == arr2[j][0] and arr1[i][1] != arr2[j][1]:
-            i += 1
-            j += 1
-            predicted += 1
-            golden += 1
-        elif arr1[i][0] < arr2[j][0]:
-            i += 1
-            predicted += 1
-        elif arr1[i][0] > arr2[j][0]:
-            j += 1
-            golden += 1
-    if i != len(arr1) - 1:
-        predicted += len(arr1) - 1 - i
-    if j != len(arr2) - 1:
-        golden += len(arr2) - 1 - j
+    if key != 'O':
+        arr1 = dict_0[key]
+        arr2 = dict_1[key]
+        i = 0
+        j = 0
+        while i < len(arr1) and j < len(arr2):
+            if arr1[i][0] == arr2[j][0] and arr1[i][1] == arr2[j][1]:
+                correct += 1
+                i += 1
+                j += 1
+                predicted += 1
+                golden += 1
+            elif arr1[i][0] == arr2[j][0] and arr1[i][1] != arr2[j][1]:
+                i += 1
+                j += 1
+                predicted += 1
+                golden += 1
+            elif arr1[i][0] < arr2[j][0]:
+                i += 1
+                predicted += 1
+            elif arr1[i][0] > arr2[j][0]:
+                j += 1
+                golden += 1
+        if i != len(arr1) - 1:
+            predicted += len(arr1) - 1 - i
+        if j != len(arr2) - 1:
+            golden += len(arr2) - 1 - j
 
 print correct, predicted, golden
 precision = 1.0*correct/predicted
