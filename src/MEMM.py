@@ -7,7 +7,7 @@ from src.prep import prep
 
 
 class MEMM():
-    def __init__(self, window_data):
+    def __init__(self, window_data, trainFileName):
         self.features = []
         self.NE_type = ["B-PER", "I-PER", "B-LOC", "I-LOC","B-ORG", "I-ORG","B-MISC", "I-MISC", "O"]
         self.word_set = ["played", "on", "American", "League"]
@@ -15,8 +15,8 @@ class MEMM():
         self.window_set = window_data
         self.boi_set = map(lambda x: x[1][2], window_data)
         self.boi_end_list = map(lambda y: y[1][2], filter(lambda x: x[-1][1] == "END", window_data))
-        self.max_iter = 30
-        self.fname = "../models/MaxentClassifier_moreFeatures.pickle"
+        self.max_iter = 5
+        self.fname = "../models/MaxentClassifier_moreFeatures_" + trainFileName + ".pickle"
 
     # reference from "Named entity recognition: a maximum entropy approach using global information"
     def name_features(self, window_tuple, previousBOI):

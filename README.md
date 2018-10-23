@@ -22,12 +22,12 @@ pip install nltk
 - **Project2_resources**: Requirements, training sets, validation sets and test sets.
 - **src**: Codes
     - HMM.py: Implementation of HMM
-    - kaggle.py: XXX
     - MEMM.py: Implementation of MEMM
     - ngram.py: N-gram models used by HMM
     - prep.py: Preprocessing of data sets
-    - test_baseline.py: XXX
-    - test_HMM.py: XXX
+    - test_baseline.py: Train the baseline model on the new_train.txt and evaluate the model based on validation.txt.
+    - test_HMM.py: Train the HMM model on the new_train.txt and evaluate the model based on validation.txt.
+    - test_MEMM.py: Train the MEMM model on the new_train.txt and evaluate the model based on validation.txt.
     - test_kaggle_HMM.py: Generate Kaggle submissions using HMM
     - test_kaggle_MEMM.py: Generate Kaggle submissions using MEMM
 - README.md
