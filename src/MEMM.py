@@ -15,7 +15,7 @@ class MEMM():
         self.window_set = window_data
         self.boi_set = map(lambda x: x[1][2], window_data)
         self.boi_end_list = map(lambda y: y[1][2], filter(lambda x: x[-1][1] == "END", window_data))
-        self.max_iter = 5
+        self.max_iter = 10
         self.fname = "../models/MaxentClassifier_moreFeatures_" + trainFileName + ".pickle"
 
     # reference from "Named entity recognition: a maximum entropy approach using global information"
@@ -41,8 +41,6 @@ class MEMM():
         features["DateName"] = word in ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",
                                         "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
-        # Corporate-Suffix-List
-        features["Corporate-Suffix"] = 0
         for word_index in range(len(window_tuple)):
             word = str(window_tuple[word_index][0])
             features["Word_" + str(word_index)] = word
