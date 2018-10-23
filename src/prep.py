@@ -177,8 +177,8 @@ class prep:
 
             line_count += 1
 
-        #transition_table = self.table_add_k_smooth_table(transition_table, 0.01)
-        #generation_table = self.table_add_k_smooth(generation_table, 0.01)
+        #transition_table = self.table_add_k_smooth_table(transition_table, 1)
+        generation_table = self.table_add_k_smooth(generation_table, 0.01)
         #print generation_table
         #generation_table = self.dist_table_smoothed_kneser_ney(generation_table)
         transition_prob = self.convert_table_to_prob(transition_table)
