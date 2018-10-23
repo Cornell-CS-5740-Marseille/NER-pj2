@@ -41,6 +41,8 @@ class MEMM():
         features["DateName"] = word in ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",
                                         "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
+        # Corporate-Suffix-List
+        features["Corporate-Suffix"] = 0
         for word_index in range(len(window_tuple)):
             word = str(window_tuple[word_index][0])
             features["Word_" + str(word_index)] = word
