@@ -10,7 +10,22 @@ data[0] = data_test[0]
 data[3] = data_test[3]
 model = HMM()
 tags = model.Viterbi(data)
+tags_0 = tags
 
+# #baseline checks
+# baseline = my_prep.generate_baseline()
+# tags = []
+# for i in range(len(data_test[0])):
+#     tag_line = []
+#     for j in range(len(data_test[0][i])):
+#         tag = ''
+#         if data_test[0][i][j] in baseline:
+#             tag = baseline[data_test[0][i][j]]
+#         else:
+#             tag = 'O'
+#         tag_line.append(tag)
+#     tags.append(tag_line)
+#
 dict = {'PER': [], 'LOC': [], 'ORG': [], 'MISC': [], 'O': []}
 prev_tag = None
 prev_number = 0
@@ -59,6 +74,7 @@ prev_number = 0
 start_num = 0
 number = 0
 tags = data[3]
+tags_1 = tags
 
 for i in range(len(tags)):
     tags_line = tags[i]
@@ -144,3 +160,7 @@ print precision, recall, f1
 # print sum
 # accuracy = float(correct) / float(sum)
 # print accuracy
+
+for i in range(len(tags_0)):
+    print tags_0[i]
+    print tags_1[i]

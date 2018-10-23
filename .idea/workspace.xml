@@ -2,8 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="72a0ad98-658e-45cd-a34f-62429934448b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/MEMM.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/MEMM.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test_MEMM.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test_MEMM.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/output/test_kaggle_baseline.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/output/test_kaggle_hmm.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prep.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/prep.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test_HMM.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test_HMM.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -77,24 +81,24 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="md" value="121" />
-          <entry key="py" value="702" />
+          <entry key="py" value="704" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Markdown" value="121" />
-          <entry key="Python" value="702" />
+          <entry key="Python" value="704" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/MEMM.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="141">
-              <caret line="22" column="21" lean-forward="true" selection-start-line="22" selection-start-column="21" selection-end-line="22" selection-end-column="21" />
+            <state relative-caret-position="481">
+              <caret line="52" column="98" selection-start-line="45" selection-start-column="12" selection-end-line="52" selection-end-column="98" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -106,7 +110,7 @@
         <entry file="file://$PROJECT_DIR$/Project2_resources/validation.txt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="30">
-              <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" selection-end-column="37" />
+              <caret line="2" selection-start-line="2" selection-end-line="2" selection-end-column="37" />
             </state>
           </provider>
         </entry>
@@ -141,11 +145,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test_MEMM.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="549">
-              <caret line="102" column="25" lean-forward="true" selection-start-line="102" selection-start-column="25" selection-end-line="102" selection-end-column="25" />
+            <state relative-caret-position="1486">
+              <caret line="102" column="25" selection-start-line="102" selection-start-column="25" selection-end-line="102" selection-end-column="25" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
                 <marker date="1540263535593" expanded="true" signature="579:1896" ph="..." />
@@ -181,8 +185,8 @@
         <option value="$PROJECT_DIR$/src/prep.py" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/src/test_HMM.py" />
-        <option value="$PROJECT_DIR$/src/MEMM.py" />
         <option value="$PROJECT_DIR$/src/test_MEMM.py" />
+        <option value="$PROJECT_DIR$/src/MEMM.py" />
       </list>
     </option>
   </component>
@@ -229,11 +233,6 @@
             <path>
               <item name="NER-pj2" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-            </path>
-            <path>
-              <item name="NER-pj2" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name=".idea" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="NER-pj2" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
@@ -449,12 +448,12 @@
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25885227" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25885227" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32857144" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32857144" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -575,6 +574,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Project2_resources/validation.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" selection-start-line="2" selection-end-line="2" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test_MEMM.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1486">
+          <caret line="102" column="25" selection-start-line="102" selection-start-column="25" selection-end-line="102" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+            <marker date="1540263535593" expanded="true" signature="579:1896" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/test_kaggle_MEMM.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -585,30 +602,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Project2_resources/validation.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/MEMM.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="22" column="21" lean-forward="true" selection-start-line="22" selection-start-column="21" selection-end-line="22" selection-end-column="21" />
+        <state relative-caret-position="481">
+          <caret line="52" column="98" selection-start-line="45" selection-start-column="12" selection-end-line="52" selection-end-column="98" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test_MEMM.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="549">
-          <caret line="102" column="25" lean-forward="true" selection-start-line="102" selection-start-column="25" selection-end-line="102" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-            <marker date="1540263535593" expanded="true" signature="579:1896" ph="..." />
           </folding>
         </state>
       </provider>
